@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +10,7 @@ using TechStoreDataTier.Interfaces;
 
 namespace TechStoreDataTier.Repositories
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         // Insert
         public int Add(User user)
@@ -35,7 +37,36 @@ namespace TechStoreDataTier.Repositories
 
         public User GetUserById(int id)
         {
-            throw new NotImplementedException();
+            User user = null;
+            try
+            {
+                string query = "select * from Users where Id = @id";
+                using (SqlConnection conn = new SqlConnection(DataBaseSettings.ConnectionString))                
+                {
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@id",id);
+
+                    conn.Open();
+
+                    SqlDataReader reader =  cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        user = new User((int)reader["Id"], reader["First_Name"].ToString(), reader["Last_Name"].ToString(), reader["PhoneNumber"].ToString(), reader["Email"].ToString(), reader["HashedPassword"].ToString(), (int)reader["Permission"]);
+                    }
+
+                    reader.Close();
+
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error in GetUser by Id Function <User Repository>" + ex);                
+            }
+
+            return user;
         }
 
         public bool IsUserExists(string email)
