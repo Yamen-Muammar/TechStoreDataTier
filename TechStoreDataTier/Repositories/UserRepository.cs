@@ -21,7 +21,29 @@ namespace TechStoreDataTier.Repositories
         // Delete
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            bool isDeleted = false;
+
+            try
+            {
+                string query = "delete from Users where Id = @id;";
+
+                using (SqlConnection conn = new SqlConnection(DataBaseSettings.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    conn.Open();
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    isDeleted = rowsAffected > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error in Delete Function <User Repository>" + ex);               
+            }
+            return isDeleted;
         }
 
         //Gets
@@ -89,7 +111,6 @@ namespace TechStoreDataTier.Repositories
 
             return usersList;
         }
-
         public User GetUserById(int id)
         {
             User user = null;
@@ -123,7 +144,6 @@ namespace TechStoreDataTier.Repositories
 
             return user;
         }
-
         public bool IsUserExists(string email)
         {
             bool isFound = false;

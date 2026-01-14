@@ -128,14 +128,17 @@ namespace TechStoreApp__Business_Data_Tier_.Services
         {
             UserRepository _userRepo = new UserRepository();
 
-            if (_userRepo.GetUserById(id) == null )
+            User userToDelete = _userRepo.GetUserById(id);
+
+            if (userToDelete == null )
             {
                 return false;
 
             }
             
             if (_userRepo.Delete(id))
-            {               
+            {
+                userToDelete = null;
                 return true;
             }
             else
