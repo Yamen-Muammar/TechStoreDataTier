@@ -146,6 +146,12 @@ namespace TechStoreApp__Business_Data_Tier_.Services
             
         }
 
+        public static bool IsUserExists(string email)
+        {
+            UserRepository _userRepo = new UserRepository();
+
+            return _userRepo.IsUserExists(email);
+        }
         private bool userDataValidation()
         {
             if(user == null)

@@ -54,7 +54,7 @@ namespace TechStoreDataTier.Repositories
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error in Login by Id Function <User Repository>" + ex);
+                Debug.WriteLine("Error in Login Function <User Repository>" + ex);
             }
 
             return user;
@@ -100,7 +100,33 @@ namespace TechStoreDataTier.Repositories
 
         public bool IsUserExists(string email)
         {
-            throw new NotImplementedException();
+            bool isFound = false;
+            try
+            {
+                string query = "select  Found = 1 from Users where Email = @email;";
+                using (SqlConnection conn = new SqlConnection(DataBaseSettings.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@email", email);
+                    
+
+
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    isFound = reader.HasRows;   
+
+                    reader.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error in IsUserExists Function <User Repository>" + ex);
+            }
+
+            return isFound;
         }
 
         //Update
