@@ -61,7 +61,33 @@ namespace TechStoreDataTier.Repositories
         }
         public List<User> GetAllUsers()
         {
-            throw new NotImplementedException();
+            List<User> usersList = new List<User>();
+            try
+            {
+                string query = "select * from Users;";
+                using (SqlConnection conn = new SqlConnection(DataBaseSettings.ConnectionString))
+                {
+                    SqlCommand cmd = new SqlCommand(query, conn);                    
+
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        usersList.Add(new User((int)reader["Id"], reader["First_Name"].ToString(), reader["Last_Name"].ToString(), reader["PhoneNumber"].ToString(), reader["Email"].ToString(), reader["HashedPassword"].ToString(), (int)reader["Permission"]));
+                    }
+
+                    reader.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error in Login Function <User Repository>" + ex);
+            }
+
+            return usersList;
         }
 
         public User GetUserById(int id)

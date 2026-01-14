@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -123,8 +124,6 @@ namespace TechStoreApp__Business_Data_Tier_.Services
                     return false;
             }
         }
-
-
         public static bool Delete(int id)
         {
             UserRepository _userRepo = new UserRepository();
@@ -145,9 +144,8 @@ namespace TechStoreApp__Business_Data_Tier_.Services
             }
             
         }
-
         public static bool IsUserExists(string email)
-        {
+        {            
             UserRepository _userRepo = new UserRepository();
 
             return _userRepo.IsUserExists(email);
