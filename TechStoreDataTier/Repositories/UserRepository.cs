@@ -84,7 +84,7 @@ namespace TechStoreDataTier.Repositories
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error in Login Function <User Repository>" + ex);
+                Debug.WriteLine("***Error in GetAllUsers Function <User Repository>" + ex);
             }
 
             return usersList;
