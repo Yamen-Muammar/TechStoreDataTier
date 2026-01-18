@@ -154,8 +154,6 @@ namespace TechStoreDataTier.Repositories
                 {
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@email", email);
-                    
-
 
                     conn.Open();
 
@@ -170,7 +168,7 @@ namespace TechStoreDataTier.Repositories
             catch (Exception ex)
             {
                 Debug.WriteLine("Error in IsUserExists Function <User Repository>" + ex);
-            }
+            }            
 
             return isFound;
         }
@@ -178,7 +176,40 @@ namespace TechStoreDataTier.Repositories
         //Update
         public bool Update(User user)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false; 
+
+            try
+            {                
+                string query = "update Users set First_Name=@firstName, Last_Name=@lastName, " +
+                    "PhoneNumber=@phoneNumber, Email=@email, HashedPassword=@hpassword, Permission=@permission" +
+                    " where Id=@id;";
+
+                using (SqlConnection conn = new SqlConnection(DataBaseSettings.ConnectionString))
+                using(SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@firstName",user.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@phoneNumber", user.PhoneNumber);
+                    cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@hpassword", user.HashedPassword);
+                    cmd.Parameters.AddWithValue("@permission", user.Permission);
+                    cmd.Parameters.AddWithValue("@id", user.Id);
+
+                    conn.Open();
+
+                    int effectedRows = cmd.ExecuteNonQuery();
+
+                    isUpdated = effectedRows > 0;
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine("Error in Update Function <User Repository>" + ex);
+            }
+
+            return isUpdated;
         }
     }
 }

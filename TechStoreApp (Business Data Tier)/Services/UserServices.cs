@@ -62,17 +62,17 @@ namespace TechStoreApp__Business_Data_Tier_.Services
         {
             UserRepository _userRepo = new UserRepository();
 
-            if (!userDataValidation())
+            if (!_userDataValidation())
             {
                 return false;
             }
 
-            if (_userRepo.IsUserExists(this.user.Email))
+            if (_userRepo.IsUserExists(user.Email))
             {
                 return false;
             }
 
-            if (_userRepo.Add(this.user) == -1)
+            if (_userRepo.Add(user) == -1)
             {
                 return false;
             }
@@ -87,7 +87,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
         {
             UserRepository _userRepo = new UserRepository();
 
-            if (!userDataValidation())
+            if (!_userDataValidation())
             {
                 return false;
             }
@@ -153,7 +153,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
 
             return _userRepo.IsUserExists(email);
         }
-        private bool userDataValidation()
+        private bool _userDataValidation()
         {
             if(user == null)
             {
@@ -164,7 +164,12 @@ namespace TechStoreApp__Business_Data_Tier_.Services
             {
                 Debug.WriteLine("**Error >> Invalid Email**");
                 return false;
-            }                        
+            }
+
+            if (user.Permission < -1)
+            {
+                return false;
+            }
 
             return true;
         }
