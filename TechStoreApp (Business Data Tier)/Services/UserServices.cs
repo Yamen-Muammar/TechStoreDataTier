@@ -13,44 +13,29 @@ using TechStoreDataTier.Repositories;
 
 namespace TechStoreApp__Business_Data_Tier_.Services
 {   
-    public class UserServices
-    {        
-        public User user;
-
-        private enum enMode
-        {
-            eAdd = 1 , eUpdate = 2 
-        }
-
-        private enMode mode;     
-        
-        public UserServices(int? id , string firstName , string lastName , string phoneNumber , string email , string hashedPassword , int permission)
-        {           
-            user = new User(id,firstName,lastName,phoneNumber,email,hashedPassword,permission);
-
-            mode = (id == null) ?enMode.eAdd: enMode.eUpdate;           
-        }
-
-        public static UserServices Find(int ID)
+    public static class UserServices
+    {                        
+        public static User Find(int ID)
         {
             UserRepository _userRepo = new UserRepository();
 
-            User tempUser = _userRepo.GetUserById(ID);
+            User findedUser = _userRepo.GetUserById(ID);
 
-            if (tempUser == null)
+            if (findedUser == null)
             { return  null; }
 
-            return new UserServices(tempUser.Id,tempUser.FirstName,tempUser.LastName,tempUser.PhoneNumber,tempUser.Email,tempUser.HashedPassword,tempUser.Permission);
+            return findedUser;
         }
 
-        public static UserServices Find(string email , string hashedPassword)
+        public static User Find(string email , string hashedPassword)
         {
             UserRepository _userRepo = new UserRepository();
-            User tempUser = _userRepo.Login(email,hashedPassword);
 
-            if (tempUser == null) { return null; }
+            User findedUser = _userRepo.Login(email,hashedPassword);
 
-            return new UserServices(tempUser.Id, tempUser.FirstName, tempUser.LastName, tempUser.PhoneNumber, tempUser.Email, tempUser.HashedPassword, tempUser.Permission);
+            if (findedUser == null) { return null; }
+
+            return findedUser;
         }
         public static List<User> GetUsersList()
         {
@@ -58,11 +43,11 @@ namespace TechStoreApp__Business_Data_Tier_.Services
             return _userRepo.GetAllUsers();
         }
 
-        private bool _add()
+        public static bool AddUser(User user)
         {
             UserRepository _userRepo = new UserRepository();
 
-            if (!_userDataValidation())
+            if (!_userDataValidation(user))
             {
                 return false;
             }
@@ -77,17 +62,16 @@ namespace TechStoreApp__Business_Data_Tier_.Services
                 return false;
             }
             else
-            {
-                mode = enMode.eUpdate;
+            {               
                 return true;
             }
         }
 
-        private bool _update()
+        public static bool UpdateUser(User user)
         {
             UserRepository _userRepo = new UserRepository();
 
-            if (!_userDataValidation())
+            if (!_userDataValidation(user))
             {
                 return false;
             }
@@ -95,35 +79,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
             return _userRepo.Update(user);
         }
 
-        public bool Save()
-        {
-            switch (this.mode)
-            {
-                case enMode.eAdd:
-                    if (_add())
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-                case enMode.eUpdate:
-
-                    if (_update())
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-                default:
-                    return false;
-            }
-        }
+        
         public static bool Delete(int id)
         {
             UserRepository _userRepo = new UserRepository();
@@ -153,7 +109,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
 
             return _userRepo.IsUserExists(email);
         }
-        private bool _userDataValidation()
+        private static bool _userDataValidation(User user)
         {
             if(user == null)
             {
