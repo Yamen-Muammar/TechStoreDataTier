@@ -49,20 +49,23 @@ namespace TechStoreApp__Business_Data_Tier_.Services
 
             if (!_userDataValidation(user))
             {
+                Debug.WriteLine("**Error >>Not Valid Enterd Data **");
                 return false;
             }
 
             if (_userRepo.IsUserExists(user.Email))
             {               
+                Debug.WriteLine("**Error >> User Already Exists **");
                 return false;
             }
 
             if (_userRepo.Add(user) == -1)
             {
+                Debug.WriteLine("**Error >> Add User Failed **");
                 return false;
             }
             else
-            {               
+            {                
                 return true;
             }
         }
@@ -73,13 +76,12 @@ namespace TechStoreApp__Business_Data_Tier_.Services
 
             if (!_userDataValidation(user))
             {
+                Debug.WriteLine("**Error >>Not Valid Enterd Data **");
                 return false;
             }
 
             return _userRepo.Update(user);
-        }
-
-        
+        }      
         public static bool Delete(int id)
         {
             UserRepository _userRepo = new UserRepository();
@@ -88,8 +90,8 @@ namespace TechStoreApp__Business_Data_Tier_.Services
 
             if (userToDelete == null )
             {
+                Debug.WriteLine("**Error >> User Not Found**");
                 return false;
-
             }
             
             if (_userRepo.Delete(id))
@@ -99,6 +101,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
             }
             else
             {
+                Debug.WriteLine("**Error >> Delete User Failed**");
                 return false;
             }
             
@@ -113,6 +116,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
         {
             if(user == null)
             {
+                Debug.WriteLine("**Error >> Not founded User**");
                 return false;
             }
 
@@ -124,6 +128,7 @@ namespace TechStoreApp__Business_Data_Tier_.Services
 
             if (user.Permission < -1)
             {
+                Debug.WriteLine("**Error >> Invalid Permission**");
                 return false;
             }
 
